@@ -1,0 +1,23 @@
+body{
+     background-color:black; 
+}
+.logo{
+  height: 100px;
+  margin-left: 26px;
+  margin-top: 15px;
+}
+.font-size-12{
+  font-size: 12px;
+}
+.heading{
+  font-size: 45px;
+}
+.title-text
+{
+   margin-top: 20px;
+
+}
+.input{
+  margin-top: 25px;
+  height: 60px;
+}
