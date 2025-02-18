@@ -21,3 +21,17 @@ body{
   margin-top: 25px;
   height: 60px;
 }
+.movie-card {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.movie-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+.abc{
+  display:flex;
+ 
+  font-size: 50px;
+}
