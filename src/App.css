@@ -43,3 +43,22 @@ body{
   transform: scale(1.05);
   box-shadow: 0px 10px 20px rgba(255, 255, 255, 0.2);
 }
+/* Movie Card Hover Effect */
+.movie-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 10px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* Carousel Image Styling */
+.carousel-img {
+  height: 500px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+

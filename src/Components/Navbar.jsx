@@ -7,7 +7,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
-    navigate("/signin");
+    navigate("/");
   };
 
   return (

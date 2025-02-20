@@ -9,6 +9,8 @@ import SignUp from './Components/SignUp';
 import Dashboard from './Components/Dashboard';
 import PrivateRoute from './Components/PrivateRoute';
 import AuthProvider from './Context/AuthContext'; // ✅ Import AuthProvider
+import "bootstrap-icons/font/bootstrap-icons.css";
+
 import './App.css';
 
 const App = () => {
