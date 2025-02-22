@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./redux/store";
@@ -15,15 +15,18 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./App.css";
 
 const App = () => {
+  const [searchKeyword, setSearchKeyword] = useState(""); // State to manage search input
+
   return (
     <Provider store={store}> {/* Wrap the app with Redux Provider */}
       <AuthProvider>
         <BrowserRouter>
-          <Navbar />
+          <Navbar onSearch={setSearchKeyword} /> {/* Pass search handler to Navbar */}
           <Routes>
             <Route path="/" element={<SignIn />} />
             <Route path="/page/:id" element={<Page />} />
-            <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
+            <Route path="/home" element={<PrivateRoute><Home searchKeyword={searchKeyword} /></PrivateRoute>} /> 
+            {/* Pass searchKeyword to Home */}
             <Route path="/signup" element={<SignUp />} />
             <Route path="/wishlist" element={<PrivateRoute><Wishlist /></PrivateRoute>} />
           </Routes>
@@ -32,4 +35,5 @@ const App = () => {
     </Provider>
   );
 };
+
 export default App;

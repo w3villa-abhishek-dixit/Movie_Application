@@ -1,9 +1,8 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
-import { useNavigate, Link } from "react-router-dom";  // Import Link
+import { useNavigate, Link } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const SignIn = () => {
@@ -11,13 +10,16 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const { login, googleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
-  const googleClientId = "672553672556-67jd3vjlugts7n7v4g9oc26ls5q9vcr8.apps.googleusercontent.com"; // Replace with actual client ID
+  const googleClientId = "672553672556-67jd3vjlugts7n7v4g9oc26ls5q9vcr8.apps.googleusercontent.com";
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (login(email, password)) {
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("username", email); // Store username
       alert("Login Successful!");
-      navigate("/home");
+      navigate("/home"); // ✅ Navigate to home **without refreshing**
+      window.dispatchEvent(new Event("storage")); // ✅ Notify Navbar to update state
     } else {
       alert("Invalid credentials!");
     }
@@ -25,11 +27,12 @@ const SignIn = () => {
 
   const handleGoogleSuccess = (response) => {
     const user = jwtDecode(response.credential);
-    console.log("Google User:", user);
-
     googleLogin(user);
+    localStorage.setItem("isAuthenticated", "true");
+    localStorage.setItem("username", user.name); // Store Google username
     alert(`Welcome, ${user.name}!`);
-    navigate("/home");
+    navigate("/home"); // ✅ Navigate to home **without refreshing**
+    window.dispatchEvent(new Event("storage")); // ✅ Notify Navbar to update state
   };
 
   const handleGoogleFailure = (error) => {
@@ -76,14 +79,12 @@ const SignIn = () => {
             />
           </div>
 
-          {/* Signup Link */}
           <div className="text-center mt-3">
             <p>
               Don't have an account?{" "}
               <Link to="/signup" className="text-primary">Sign Up</Link>
             </p>
           </div>
-
         </div>
       </div>
     </GoogleOAuthProvider>

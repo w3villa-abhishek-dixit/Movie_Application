@@ -61,4 +61,8 @@ body{
   object-fit: cover;
   border-radius: 15px;
 }
-
+.wishlist-hover:hover {
+  background-color: yellow !important;
+  border-color: yellow !important;
+  color: black!important;
+}
