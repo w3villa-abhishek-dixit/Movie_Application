@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";  // Import Link
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 
@@ -75,6 +75,15 @@ const SignIn = () => {
               onError={handleGoogleFailure}
             />
           </div>
+
+          {/* Signup Link */}
+          <div className="text-center mt-3">
+            <p>
+              Don't have an account?{" "}
+              <Link to="/signup" className="text-primary">Sign Up</Link>
+            </p>
+          </div>
+
         </div>
       </div>
     </GoogleOAuthProvider>

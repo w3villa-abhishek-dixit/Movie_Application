@@ -14,7 +14,7 @@ const SignUp = () => {
     e.preventDefault();
     if (register(email, password)) {
       alert("Sign-up successful! Please login.");
-      navigate("/signin");
+      navigate("/");
     }
   };
 
