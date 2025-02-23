@@ -25,7 +25,7 @@ const Home = ({ searchKeyword }) => {
   };
 
   useEffect(() => {
-    fetchMovies("new", setLatestMovies); // Fetch latest movies for carousel
+    fetchMovies("new", setLatestMovies);
     if (searchKeyword) {
       fetchMovies(searchKeyword, setMovies);
     } else {
@@ -38,19 +38,33 @@ const Home = ({ searchKeyword }) => {
       {/* Latest Movies Carousel */}
       <LatestMoviesCarousel latestMovies={latestMovies} />
 
-      <h2 className="text-light mt-3">{searchKeyword ? `Results for "${searchKeyword}"` : "Popular Movies"}</h2>
+      <h2 className="text-light mt-3 text-center">
+        {searchKeyword ? `Results for "${searchKeyword}"` : "Popular Movies"}
+      </h2>
+
       <div className="row mt-4">
         {movies.length > 0 ? (
           movies.map((movie, index) => (
-            <div key={index} className="col-md-3 mb-4">
-              <div className="card movie-card h-100 shadow-sm">
+            <div key={index} className="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4 d-flex">
+              <div className="card movie-card w-100 h-100 shadow-sm">
                 <NavLink to={`/page/${movie.imdbID}`} className="text-decoration-none">
-                  <img src={movie.Poster} className="card-img-top" alt={movie.Title} style={{ height: "350px", objectFit: "cover", cursor: "pointer" }} />
+                  <img
+                    src={movie.Poster}
+                    className="card-img-top"
+                    alt={movie.Title}
+                    style={{ maxHeight: "350px", objectFit: "cover", cursor: "pointer" }}
+                  />
                 </NavLink>
-                <div className="card-body text-center">
+                <div className="card-body text-center d-flex flex-column justify-content-between">
                   <h5 className="card-title">{movie.Title}</h5>
-                  <button className={`btn ${wishlist.some((item) => item.imdbID === movie.imdbID) ? "btn-danger" : "btn-primary"}`} 
-                    onClick={() => wishlist.some((item) => item.imdbID === movie.imdbID) ? dispatch(removeFromWishlist(movie.imdbID)) : dispatch(addToWishlist(movie))}>
+                  <button
+                    className={`btn ${wishlist.some((item) => item.imdbID === movie.imdbID) ? "btn-danger" : "btn-primary"}`}
+                    onClick={() =>
+                      wishlist.some((item) => item.imdbID === movie.imdbID)
+                        ? dispatch(removeFromWishlist(movie.imdbID))
+                        : dispatch(addToWishlist(movie))
+                    }
+                  >
                     {wishlist.some((item) => item.imdbID === movie.imdbID) ? "Remove from Wishlist" : "Add to Wishlist"}
                   </button>
                 </div>
@@ -77,10 +91,10 @@ const LatestMoviesCarousel = ({ latestMovies }) => (
                 className="d-block w-100"
                 src={movie.Poster.replace("SX300", "SX1080")}
                 alt={movie.Title}
-                style={{ height: "500px", objectFit: "cover" }}
+                style={{ maxHeight: "500px", objectFit: "cover" }}
               />
               <Carousel.Caption>
-                <h3>{movie.Title}</h3>
+                <h3 className="fs-5">{movie.Title}</h3>
               </Carousel.Caption>
             </Carousel.Item>
           ))}

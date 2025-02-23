@@ -7,12 +7,12 @@ const Navbar = ({ onSearch }) => {
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
   const [username, setUsername] = useState(localStorage.getItem("username"));
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleStorageChange = () => {
       setUsername(localStorage.getItem("username"));
     };
-
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
@@ -39,27 +39,32 @@ const Navbar = ({ onSearch }) => {
           <img src="/assets/images/logo.png" alt="Logo" className="logo" style={{ height: "80px" }} />
         </NavLink>
 
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        {/* Hamburger Button for Mobile */}
+        <button 
+          className="navbar-toggler d-lg-none" 
+          type="button" 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
+        {/* Collapsible Menu */}
+        <div className={`collapse navbar-collapse ${isMenuOpen ? "show" : ""}`} id="navbarNav">
           {username ? (
-            <ul className="navbar-nav align-items-center">
+            <ul className="navbar-nav align-items-center mx-auto text-center">
               <li className="nav-item">
                 <NavLink className="nav-link text-white mx-3 fs-5" to="/home">Home</NavLink>
               </li>
               <li className="nav-item">
-                  <NavLink className="btn btn-outline-light mx-3 fs-5 wishlist-hover" to="/wishlist">
-                     <i className="bi bi-heart-fill"></i> Wishlist
-                  </NavLink>
+                <NavLink className="btn btn-outline-light mx-3 fs-5" to="/wishlist">
+                  <i className="bi bi-heart-fill"></i> Wishlist
+                </NavLink>
               </li>
-
-              {/* Enlarged Search Bar */}
-              <li className="nav-item d-flex">
+              {/* Search Bar */}
+              <li className="nav-item d-flex justify-content-center w-100">
                 <input
                   type="text"
-                  className="form-control form-control-lg me-2 w-100"
+                  className="form-control form-control-lg me-2 w-75"
                   placeholder="Search movies..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
@@ -73,7 +78,7 @@ const Navbar = ({ onSearch }) => {
         </div>
 
         {/* Right Side: Username and Logout OR Sign In & Sign Up */}
-        <div className="d-flex align-items-center">
+        <div className={`d-flex align-items-center ${isMenuOpen ? "flex-column text-center w-100" : "d-none d-lg-flex"}`}>
           {username ? (
             <>
               <span className="text-white me-3 fs-5">Logged in as <strong>{username}</strong></span>
