@@ -10,41 +10,88 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 const Home = ({ searchKeyword }) => {
   const [movies, setMovies] = useState([]);
   const [latestMovies, setLatestMovies] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState("");
+  const [sortOption, setSortOption] = useState("popularity");
   const dispatch = useDispatch();
   const wishlist = useSelector((state) => state.wishlist.wishlist);
   const API_KEY = "d909114f";
   const API_URL = "https://www.omdbapi.com/";
 
-  const fetchMovies = async (query, setterFunction) => {
+  const fetchMovies = async (query) => {
     try {
       const { data } = await axios.get(`${API_URL}?apikey=${API_KEY}&s=${query}&type=movie`);
-      setterFunction(data?.Search || []);
+      if (data.Search) {
+        const detailedMovies = await Promise.all(
+          data.Search.map(async (movie) => {
+            const details = await axios.get(`${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`);
+            return details.data;
+          })
+        );
+        return detailedMovies;
+      }
+      return [];
     } catch (error) {
       console.error(`Error fetching ${query} movies:`, error);
+      return [];
     }
   };
 
   useEffect(() => {
-    fetchMovies("new", setLatestMovies);
-    if (searchKeyword) {
-      fetchMovies(searchKeyword, setMovies);
-    } else {
-      fetchMovies("movie", setMovies);
-    }
+    fetchMovies("new").then(setLatestMovies);
+    fetchMovies(searchKeyword || "movie").then(setMovies);
   }, [searchKeyword]);
+
+  useEffect(() => {
+    setGenres(["Action", "Thriller", "Comedy", "Horror", "Sci-Fi", "Love"]);
+  }, []);
+
+  useEffect(() => {
+    if (selectedGenre) {
+      fetchMovies(selectedGenre).then(setMovies);
+    }
+  }, [selectedGenre]);
+
+  const handleFilterByGenre = (genre) => {
+    setSelectedGenre(genre);
+  };
+
+  const handleSort = (option) => {
+    setSortOption(option);
+  };
+
+  const sortedMovies = movies.sort((a, b) => {
+    if (sortOption === "popularity") return parseInt(b.imdbVotes || 0) - parseInt(a.imdbVotes || 0);
+    if (sortOption === "rating") return parseFloat(b.imdbRating || 0) - parseFloat(a.imdbRating || 0);
+    if (sortOption === "release") return parseInt(b.Year || 0) - parseInt(a.Year || 0);
+    return 0;
+  });
 
   return (
     <div className="container-fluid">
-      {/* Latest Movies Carousel */}
       <LatestMoviesCarousel latestMovies={latestMovies} />
+
+      <div className="filters d-flex justify-content-center my-3 gap-3">
+        <select className="form-select w-auto" onChange={(e) => handleFilterByGenre(e.target.value)}>
+          <option value="">All Genres</option>
+          {genres.map((genre, index) => (
+            <option key={index} value={genre}>{genre}</option>
+          ))}
+        </select>
+        <select className="form-select w-auto" onChange={(e) => handleSort(e.target.value)}>
+          <option value="popularity">Popularity</option>
+          <option value="rating">Rating</option>
+          <option value="release">Release Date</option>
+        </select>
+      </div>
 
       <h2 className="text-light mt-3 text-center">
         {searchKeyword ? `Results for "${searchKeyword}"` : "Popular Movies"}
       </h2>
 
       <div className="row mt-4">
-        {movies.length > 0 ? (
-          movies.map((movie, index) => (
+        {sortedMovies.length > 0 ? (
+          sortedMovies.map((movie, index) => (
             <div key={index} className="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4 d-flex">
               <div className="card movie-card w-100 h-100 shadow-sm">
                 <NavLink to={`/page/${movie.imdbID}`} className="text-decoration-none">
@@ -57,6 +104,7 @@ const Home = ({ searchKeyword }) => {
                 </NavLink>
                 <div className="card-body text-center d-flex flex-column justify-content-between">
                   <h5 className="card-title">{movie.Title}</h5>
+                  <p>{movie.Genre || "Unknown Genre"}</p>
                   <button
                     className={`btn ${wishlist.some((item) => item.imdbID === movie.imdbID) ? "btn-danger" : "btn-primary"}`}
                     onClick={() =>
@@ -79,7 +127,6 @@ const Home = ({ searchKeyword }) => {
   );
 };
 
-// Latest Movies Carousel Component
 const LatestMoviesCarousel = ({ latestMovies }) => (
   <div className="row mt-4">
     <div className="col-12">
