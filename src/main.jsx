@@ -1,10 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client'; // Correct import for createRoot
-import App from './App.jsx';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import { ThemeProvider } from "./Context/ThemeContext"; 
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+// import { LanguageProvider } from "./context/LanguageContext"; 
+// import "./i18n"; // Import i18n setup
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    {/* <LanguageProvider> */}
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    {/* </LanguageProvider> */}
   </React.StrictMode>
 );
-

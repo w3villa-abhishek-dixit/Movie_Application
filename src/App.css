@@ -1,6 +1,6 @@
-body{
+/* body{
      background: black; 
-}
+} */
 .logo{
   height: 100px;
   margin-left: 26px;
@@ -66,3 +66,30 @@ body{
   border-color: yellow !important;
   color: black!important;
 }
+
+
+
+
+/* Light Theme (Default) */
+body.light-theme {
+  background-color:gray;
+  color: #212529;
+}
+
+/* Dark Theme */
+body.dark-theme {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+/* Make navbar adapt to theme */
+.bg-light {
+  background-color: #ffffff !important;
+  color: #212529 !important;
+}
+
+.bg-dark {
+  background-color: #121212 !important;
+  color: #ffffff !important;
+}
+
