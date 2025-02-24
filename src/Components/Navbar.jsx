@@ -87,7 +87,7 @@ const Navbar = ({ onSearch }) => {
           ) : null}
         </div>
 
-        {/* Right Side: Language Selector, Dark Mode Toggle, Username, Logout OR Sign In & Sign Up */}
+        
         <div className={`d-flex mt-2 lg-md-0 align-items-center ${isMenuOpen ? "flex-column gap-3 text-center w-100" : "d-none d-lg-flex"}`}>
           {/* Language Selector (Restored) */}
           <select

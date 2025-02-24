@@ -10,7 +10,7 @@ import SignUp from "./Components/SignUp";
 import Wishlist from "./Components/Wishlist";
 import PrivateRoute from "./Components/PrivateRoute";
 import AuthProvider from "./Context/AuthContext";
-
+import { LanguageProvider } from "./Context/LanguageContext";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./App.css";
 
@@ -18,19 +18,20 @@ const App = () => {
   const [searchKeyword, setSearchKeyword] = useState(""); // State to manage search input
 
   return (
-    <Provider store={store}> {/* Wrap the app with Redux Provider */}
+    <Provider store={store}>
       <AuthProvider>
-        <BrowserRouter>
-          <Navbar onSearch={setSearchKeyword} /> {/* Pass search handler to Navbar */}
-          <Routes>
-            <Route path="/" element={<SignIn />} />
-            <Route path="/page/:id" element={<Page />} />
-            <Route path="/home" element={<PrivateRoute><Home searchKeyword={searchKeyword} /></PrivateRoute>} /> 
-            {/* Pass searchKeyword to Home */}
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/wishlist" element={<PrivateRoute><Wishlist /></PrivateRoute>} />
-          </Routes>
-        </BrowserRouter>
+        <LanguageProvider>
+          <BrowserRouter>
+            <Navbar onSearch={setSearchKeyword} />
+            <Routes>
+              <Route path="/" element={<SignIn />} />
+              <Route path="/page/:id" element={<Page />} />
+              <Route path="/home" element={<PrivateRoute><Home searchKeyword={searchKeyword} /></PrivateRoute>} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/wishlist" element={<PrivateRoute><Wishlist /></PrivateRoute>} />
+            </Routes>
+          </BrowserRouter>
+        </LanguageProvider>
       </AuthProvider>
     </Provider>
   );
