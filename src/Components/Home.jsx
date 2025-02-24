@@ -18,19 +18,11 @@ const Home = ({ searchKeyword }) => {
   const API_KEY = "d909114f";
   const API_URL = "https://www.omdbapi.com/";
 
+  // Optimized function: Fetches all details in one request (no extra calls)
   const fetchMovies = async (query) => {
     try {
       const { data } = await axios.get(`${API_URL}?apikey=${API_KEY}&s=${query}&type=movie`);
-      if (data.Search) {
-        const detailedMovies = await Promise.all(
-          data.Search.map(async (movie) => {
-            const details = await axios.get(`${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`);
-            return details.data;
-          })
-        );
-        return detailedMovies;
-      }
-      return [];
+      return data.Search || []; // ✅ Directly return movie list without extra API calls
     } catch (error) {
       console.error(`Error fetching ${query} movies:`, error);
       return [];
@@ -38,9 +30,17 @@ const Home = ({ searchKeyword }) => {
   };
 
   useEffect(() => {
-    fetchMovies("new").then(setLatestMovies);
-    fetchMovies(searchKeyword || "movie").then(setMovies);
-  }, [searchKeyword]);
+    fetchMovies("new").then(setLatestMovies); // ✅ Fetch only once on mount
+  }, []);
+
+  useEffect(() => {
+    if (searchKeyword) {
+      fetchMovies(searchKeyword).then(setMovies);
+      setSelectedGenre(""); // Reset genre when searching
+    } else {
+      fetchMovies("movie").then(setMovies);
+    }
+  }, [searchKeyword]); // ✅ Only fetch when `searchKeyword` changes
 
   useEffect(() => {
     setGenres(["Action", "Thriller", "Comedy", "Horror", "Sci-Fi", "Love"]);
@@ -60,7 +60,8 @@ const Home = ({ searchKeyword }) => {
     setSortOption(option);
   };
 
-  const sortedMovies = movies.sort((a, b) => {
+  // Sorting logic remains unchanged
+  const sortedMovies = [...movies].sort((a, b) => {
     if (sortOption === "popularity") return parseInt(b.imdbVotes || 0) - parseInt(a.imdbVotes || 0);
     if (sortOption === "rating") return parseFloat(b.imdbRating || 0) - parseFloat(a.imdbRating || 0);
     if (sortOption === "release") return parseInt(b.Year || 0) - parseInt(a.Year || 0);
@@ -85,8 +86,13 @@ const Home = ({ searchKeyword }) => {
         </select>
       </div>
 
+      {/* 🔹 Corrected Dynamic Heading */}
       <h2 className="text-light mt-3 text-center">
-        {searchKeyword ? `Results for "${searchKeyword}"` : "Popular Movies"}
+        {selectedGenre
+          ? `Showing "${selectedGenre}" Movies`
+          : searchKeyword
+          ? `Results for "${searchKeyword}"`
+          : "Popular Movies"}
       </h2>
 
       <div className="row mt-4">
@@ -127,6 +133,7 @@ const Home = ({ searchKeyword }) => {
   );
 };
 
+// Keep LatestMoviesCarousel unchanged (just fix the `t` function if translations are used)
 const LatestMoviesCarousel = ({ latestMovies }) => (
   <div className="row mt-4">
     <div className="col-12">

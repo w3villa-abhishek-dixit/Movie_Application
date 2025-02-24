@@ -92,4 +92,18 @@ body.dark-theme {
   background-color: #121212 !important;
   color: #ffffff !important;
 }
+ 
+
+@media (max-width: 1024px) {
+  .navbar-nav .nav-item.d-flex input {
+    width: 80%; /* Adjust width to make it fit well */
+    font-size: 16px; /* Increase font size for better readability */
+    padding: 10px; /* Adjust padding for better spacing */
+  }
+
+  .navbar-nav .nav-item.d-flex button {
+    font-size: 16px; /* Match button font size */
+    padding: 10px 15px; /* Adjust button padding */
+  }
+}
 
